@@ -74,14 +74,43 @@ def customers():
 # dynamic url
 @app.route("/customers/<int:id>", methods=["GET"])
 def get_customer(id):
-    pass
+    customer = next((c for c in customer_list if c["id"] == id), None)
+    if not customer:
+        return jsonify("Customer not found"), 404
+
+    return jsonify(customer.to_dict()), 200
 
 
 @app.route("/customers/<int:id>", methods=["PATCH"])
 def update_customer(id):
-    pass
+    data = request.get_json()
 
+    customer = next((c for c in customer_list if c["id"] == id), None)
+   
+   #check each field individually
+    if not customer:
+        return jsonify("Customer not found"), 404
+    if "first_name" in data:
+        customer["first_name"] = data["first_name"]
+    if "last_name" in data:
+        customer["last_name"] = data["last_name"]
+    if "email" in data:
+        customer["email"] = data["email"]
+    if "phone" in data:
+        customer["phone"] = data["phone"]
+    
+    return jsonify(customer.to_dict()), 200
 
+    
 @app.route("/customers/<int:id>", methods=["DELETE"])
 def delete_customer(id):
-    pass
+   global customers_list
+   customer = next((c for c in customer_list if c["id"] == id), None)
+   if not customer:
+        return jsonify("Customer not found"), 404
+    
+   customers_list = [c for c in customer_list if c["id"] != id]
+   return "", 204
+
+if __name__ == "__main__":
+    app.run(debug=True)
