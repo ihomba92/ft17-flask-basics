@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 from customer import Customer
 import structlog
 from flask_cors import CORS
@@ -104,13 +104,4 @@ def update_customer(id):
     
 @app.route("/customers/<int:id>", methods=["DELETE"])
 def delete_customer(id):
-   global customers_list
-   customer = next((c for c in customer_list if c["id"] == id), None)
-   if not customer:
-        return jsonify("Customer not found"), 404
-    
-   customers_list = [c for c in customer_list if c["id"] != id]
-   return "", 204
-
-if __name__ == "__main__":
-    app.run(debug=True)
+    pass
